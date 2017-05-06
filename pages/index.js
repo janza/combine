@@ -96,15 +96,19 @@ class Page extends React.Component {
   }
 
   settleDots (dots) {
-    const newMap = Array.from({length: 7}).map(_ =>
-      Array.from({length: 7}).map(_ => null)
-    )
+    const newMap = {}
+    for (let i = 0; i < 7; i++) {
+      newMap[i] = {}
+      for (let j = -1; j < 7; j++) {
+        newMap[i][j] = null
+      }
+    }
     dots.forEach(d => {
       newMap[d.x][d.y] = d
     })
     for (let i = 0; i < 7; i++) {
       var firstFree = null
-      for (let j = 6; j >= 0; j--) {
+      for (let j = 6; j >= -1; j--) {
         if (!newMap[i][j] && firstFree === null) {
           firstFree = j
         }
@@ -117,12 +121,16 @@ class Page extends React.Component {
   }
 
   cleanupDots (dots, cb) {
-    const map = Array.from({length: 7}).map(_ =>
-      Array.from({length: 7}).map(_ => null)
-    )
-    const keep = Array.from({length: 7}).map(_ =>
-      Array.from({length: 7}).map(_ => true)
-    )
+    const map = {}
+    const keep = {}
+    for (let i = 0; i < 7; i++) {
+      map[i] = {}
+      keep[i] = {}
+      for (let j = -1; j < 7; j++) {
+        map[i][j] = null
+        keep[i][j] = true
+      }
+    }
     dots.forEach(d => {
       map[d.x][d.y] = d
     })
@@ -141,14 +149,14 @@ class Page extends React.Component {
     }
     let freshDots = []
     for (let i = 0; i < 7; i++) {
-      for (let j = 0; j < 7; j++) {
+      for (let j = -1; j < 7; j++) {
         const l = checkTile(map[i][j])
         if (l.length > 2) {
           const newColoredDot = l.reduce((min, d) => {
             if (d.y > min.y) return d
             if (d.y === min.y && d.x < min.x) return d
             return min
-          }, {x: 10, y: -1})
+          }, {x: 10, y: -2})
 
           freshDots.push(
             this.newDotAt(
@@ -214,7 +222,6 @@ class Page extends React.Component {
         }
       }
     })
-    if (newDots.some(d => d.y < 0)) return this.gameOver()
     this.setState({
       ...this.state,
       dots: inactiveDots.concat(newDots),
@@ -233,6 +240,7 @@ class Page extends React.Component {
       dots: newRun
     })
     if (oldRun.length === newRun.length) {
+      if (newRun.some(d => d.y < 0)) return this.gameOver()
       return this.setState({
         ...this.state,
         floatingDots: [this.newDot(4), this.newDot(5)]
