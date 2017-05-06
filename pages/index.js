@@ -5,17 +5,19 @@ import React from 'react'
 const width = 500
 
 const colors = [
-  '#ffd600',
-  '#00c853',
-  '#aa00ff',
-  '#d50000',
-  '#ff6d00',
-  '#c51162',
-  '#212121',
-  '#263238'
+  '#4CDC00',
+  '#FDD401',
+  '#DB7D1B',
+  '#DD2C2C',
+  '#EE519F',
+  '#AC32AF',
+  '#314FFF',
+  '#0EC5EC',
+  '#131313',
+  '#E9E9E9'
 ]
 
-const thresholds = [0, 0, 5, 30, 90, 150, 230, 280]
+const thresholds = [0, 0, 5, 30, 90, 150, 230, 280, 350, 450]
 
 var dotsId = 0
 
