@@ -43,7 +43,7 @@ const Levels = ({current}) => {
     flexDirection: 'column-reverse'
   }}>
     {colors.map((c, i) => {
-      return <div style={{
+      return <div key={c} style={{
         background: c,
         opacity: current >= i ? 1 : 0.2,
         width: `${width / colors.length}px`,
@@ -142,17 +142,20 @@ class Page extends React.Component {
       for (let j = 0; j < 7; j++) {
         const l = checkTile(map[i][j])
         if (l.length > 2) {
-          const newColoredDot = Math.floor(Math.random() * l.length)
+          const newColoredDot = l.reduce((min, d) => {
+            if (d.y > min.y) return d
+            if (d.y === min.y && d.x < min.x) return d
+            return min
+          }, {x: 10, y: -1})
+
+          freshDots.push(
+            this.newDotAt(
+              newColoredDot.x,
+              newColoredDot.y,
+              newColoredDot.type + 1
+            )
+          )
           l.forEach((d, i) => {
-            if (i === newColoredDot) {
-              freshDots.push(
-                this.newDotAt(
-                  d.x,
-                  d.y,
-                  Math.floor(Math.random() * (this.state.level + 1))
-                )
-              )
-            }
             keep[d.x][d.y] = false
           })
           this.state.blocksKilled++
