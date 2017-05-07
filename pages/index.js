@@ -37,22 +37,31 @@ const Dot = ({x, y, type, floating}) => (
 )
 
 const Levels = ({current}) => {
-  return <div style={{
-    position: 'absolute',
-    left: `-${width / colors.length + 10}px`,
-    top: 0,
-    display: 'flex',
-    flexDirection: 'column-reverse'
-  }}>
-    {colors.map((c, i) => {
-      return <div key={c} style={{
-        background: c,
-        opacity: current >= i ? 1 : 0.2,
-        width: `${width / colors.length}px`,
-        height: `${width / colors.length}px`
-      }} />
-    })}
-  </div>
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: `-${width / colors.length + 10}px`,
+        top: 0,
+        display: 'flex',
+        flexDirection: 'column-reverse'
+      }}
+    >
+      {colors.map((c, i) => {
+        return (
+          <div
+            key={c}
+            style={{
+              background: c,
+              opacity: current >= i ? 1 : 0.2,
+              width: `${width / colors.length}px`,
+              height: `${width / colors.length}px`
+            }}
+          />
+        )
+      })}
+    </div>
+  )
 }
 
 class Page extends React.Component {
@@ -152,19 +161,24 @@ class Page extends React.Component {
       for (let j = -1; j < 7; j++) {
         const l = checkTile(map[i][j])
         if (l.length > 2) {
-          const newColoredDot = l.reduce((min, d) => {
-            if (d.y > min.y) return d
-            if (d.y === min.y && d.x < min.x) return d
-            return min
-          }, {x: 10, y: -2})
-
-          freshDots.push(
-            this.newDotAt(
-              newColoredDot.x,
-              newColoredDot.y,
-              newColoredDot.type + 1
-            )
+          const newColoredDot = l.reduce(
+            (min, d) => {
+              if (d.y > min.y) return d
+              if (d.y === min.y && d.x < min.x) return d
+              return min
+            },
+            {x: 10, y: -2}
           )
+
+          if (newColoredDot.type !== colors.length - 1) {
+            freshDots.push(
+              this.newDotAt(
+                newColoredDot.x,
+                newColoredDot.y,
+                newColoredDot.type + 1
+              )
+            )
+          }
           l.forEach((d, i) => {
             keep[d.x][d.y] = false
           })
@@ -392,18 +406,20 @@ class Page extends React.Component {
             background: '#fff'
           }}
         >
-          <div style={{
-            display: this.state.gameover ? 'block' : 'none',
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-            fontSize: '50px',
-            fontFamily: 'Open sans, sans-serif',
-            whiteSpace: 'nowrap',
-            color: '#d50000',
-            fontWeight: 'bold'
-          }}>
+          <div
+            style={{
+              display: this.state.gameover ? 'block' : 'none',
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
+              fontSize: '50px',
+              fontFamily: 'Open sans, sans-serif',
+              whiteSpace: 'nowrap',
+              color: '#d50000',
+              fontWeight: 'bold'
+            }}
+          >
             GAME OVER
           </div>
           <Levels current={this.state.level} />
@@ -427,3 +443,4 @@ class Page extends React.Component {
 }
 
 export default () => <Page />
+
