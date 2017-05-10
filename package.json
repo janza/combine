@@ -2,10 +2,11 @@
   "name": "combine",
   "license": "MIT",
   "dependencies": {
-    "next": "^2.3.0-alpha1",
+    "next": "*",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-key-handler": "^0.3.0",
+    "react-swipeable": "^4.0.0",
     "react-transition-group": "^1.1.2"
   },
   "scripts": {

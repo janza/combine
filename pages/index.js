@@ -1,6 +1,8 @@
 import KeyHandler, {KEYDOWN} from 'react-key-handler'
 import ReactCSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 import React from 'react'
+import Swipeable from 'react-swipeable'
+import Head from 'next/head'
 
 const width = 500
 
@@ -26,12 +28,12 @@ const Dot = ({x, y, type, floating}) => (
     style={{
       position: 'absolute',
       transition: !floating ? 'top 0.4s, left 0.06s linear' : '0.1s',
-      left: `${width / 7 * x}px`,
-      top: `${width / 7 * y}px`,
+      left: `${100 / 7 * x}%`,
+      top: `${100 / 7 * y}%`,
       background: colors[type],
       borderRadius: '50%',
-      width: `${width / 7}px`,
-      height: `${width / 7}px`
+      width: `${100 / 7}%`,
+      height: `${100 / 7}%`
     }}
   />
 )
@@ -41,10 +43,12 @@ const Levels = ({current}) => {
     <div
       style={{
         position: 'absolute',
-        left: `-${width / colors.length + 10}px`,
-        top: 0,
+        left: 0,
+        top: '100%',
+        width: '100%',
+        height: `${100}%`,
         display: 'flex',
-        flexDirection: 'column-reverse'
+        flexDirection: 'row-reverse'
       }}
     >
       {colors.map((c, i) => {
@@ -54,8 +58,8 @@ const Levels = ({current}) => {
             style={{
               background: c,
               opacity: current >= i ? 1 : 0.2,
-              width: `${width / colors.length}px`,
-              height: `${width / colors.length}px`
+              width: `${100 / colors.length}%`,
+              height: `${100 / colors.length}%`
             }}
           />
         )
@@ -170,7 +174,7 @@ class Page extends React.Component {
             {x: 10, y: -2}
           )
 
-          if (newColoredDot.type !== colors.length - 1) {
+          if (newColoredDot.type < colors.length - 1) {
             freshDots.push(
               this.newDotAt(
                 newColoredDot.x,
@@ -273,23 +277,19 @@ class Page extends React.Component {
   rotateDots () {
     const dots = this.state.floatingDots
     if (!dots.length) return
+    var newFloatingDots
     if (dots[0].y === dots[1].y) {
       if (dots[0].x < dots[1].x) {
-        return this.setState({
-          ...this.state,
-          floatingDots: [
-            {
-              ...dots[0],
-              y: dots[1].y - 1,
-              x: dots[1].x
-            },
-            dots[1]
-          ]
-        })
-      }
-      return this.setState({
-        ...this.state,
-        floatingDots: [
+        newFloatingDots = [
+          {
+            ...dots[0],
+            y: dots[1].y - 1,
+            x: dots[1].x
+          },
+          dots[1]
+        ]
+      } else {
+        newFloatingDots = [
           dots[0],
           {
             ...dots[1],
@@ -297,12 +297,10 @@ class Page extends React.Component {
             x: dots[0].x
           }
         ]
-      })
-    }
-    if (dots[0].y < dots[1].y) {
-      return this.setState({
-        ...this.state,
-        floatingDots: [
+      }
+    } else {
+      if (dots[0].y < dots[1].y) {
+        newFloatingDots = [
           {
             ...dots[0],
             x: dots[1].x,
@@ -314,41 +312,82 @@ class Page extends React.Component {
             y: dots[1].y
           }
         ]
-      })
+      } else {
+        newFloatingDots = [
+          {
+            ...dots[0],
+            x: dots[0].x - 1,
+            y: dots[0].y
+          },
+          {
+            ...dots[1],
+            x: dots[0].x,
+            y: dots[0].y
+          }
+        ]
+      }
+    }
+    if (newFloatingDots[0].x < 0 || newFloatingDots[1].x < 0) {
+      newFloatingDots = newFloatingDots.map(d => ({
+        ...d,
+        x: d.x + 1
+      }))
     }
     this.setState({
       ...this.state,
-      floatingDots: [
-        {
-          ...dots[0],
-          x: dots[0].x - 1,
-          y: dots[0].y
-        },
-        {
-          ...dots[1],
-          x: dots[0].x,
-          y: dots[0].y
-        }
-      ]
+      floatingDots: newFloatingDots
     })
+  }
+
+  isCloseToAngle (angle, target) {
+    const tolerance = 0.6
+    return target - tolerance < angle && angle < target + tolerance
+  }
+
+  swiped (e, deltaX, deltaY, isFlick, velocity) {
+    if (!isFlick) return
+    e.preventDefault()
+
+    const angle = Math.atan2(deltaY, deltaX)
+    console.log(angle)
+    if (this.isCloseToAngle(angle, 0)) {
+      this.moveDotsLeft()
+    } else if (this.isCloseToAngle(angle, Math.PI)) {
+      this.moveDotsRight()
+    } else if (this.isCloseToAngle(angle, Math.PI / 2)) {
+      this.rotateDots()
+    } else if (this.isCloseToAngle(angle, -Math.PI / 2)) {
+      this.pushDots()
+    }
   }
   render () {
     return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'fixed',
-          background: '#f5f5f5',
-          margin: 0,
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0
-        }}
-      >
-        <style jsx global>{`
+      <Swipeable onSwiped={this.swiped.bind(this)}>
+
+        <Head>
+          <title>Combine!</title>
+          <meta charSet='utf-8' />
+          <meta
+            name='viewport'
+            content='initial-scale=1.0, width=device-width'
+          />
+        </Head>
+
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'fixed',
+            background: '#f5f5f5',
+            margin: 0,
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0
+          }}
+        >
+          <style jsx global>{`
 .example-enter {
   transform: scale(1.7);
   border-radius: 0% !important;
@@ -376,68 +415,71 @@ class Page extends React.Component {
 }
         `}</style>
 
-        <KeyHandler
-          keyEventName={KEYDOWN}
-          keyValue='ArrowDown'
-          onKeyHandle={() => this.pushDots()}
-        />
-        <KeyHandler
-          keyEventName={KEYDOWN}
-          keyValue='ArrowLeft'
-          onKeyHandle={() => this.moveDotsLeft()}
-        />
-        <KeyHandler
-          keyEventName={KEYDOWN}
-          keyValue='ArrowRight'
-          onKeyHandle={() => this.moveDotsRight()}
-        />
-        <KeyHandler
-          keyEventName={KEYDOWN}
-          keyValue='ArrowUp'
-          onKeyHandle={() => this.rotateDots()}
-        />
+          <KeyHandler
+            keyEventName={KEYDOWN}
+            keyValue='ArrowDown'
+            onKeyHandle={() => this.pushDots()}
+          />
+          <KeyHandler
+            keyEventName={KEYDOWN}
+            keyValue='ArrowLeft'
+            onKeyHandle={() => this.moveDotsLeft()}
+          />
+          <KeyHandler
+            keyEventName={KEYDOWN}
+            keyValue='ArrowRight'
+            onKeyHandle={() => this.moveDotsRight()}
+          />
+          <KeyHandler
+            keyEventName={KEYDOWN}
+            keyValue='ArrowUp'
+            onKeyHandle={() => this.rotateDots()}
+          />
 
-        <div
-          style={{
-            position: 'relative',
-            border: '1px solid #ddd',
-            width: `${width}px`,
-            height: `${width}px`,
-            background: '#fff'
-          }}
-        >
           <div
             style={{
-              display: this.state.gameover ? 'block' : 'none',
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
-              fontSize: '50px',
-              fontFamily: 'Open sans, sans-serif',
-              whiteSpace: 'nowrap',
-              color: '#d50000',
-              fontWeight: 'bold'
+              position: 'relative',
+              border: '1px solid #ddd',
+              width: `${width}px`,
+              paddingBottom: '100%',
+              height: 0,
+              maxWidth: '100%',
+              background: '#fff'
             }}
           >
-            GAME OVER
+            <div
+              style={{
+                display: this.state.gameover ? 'block' : 'none',
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+                fontSize: '50px',
+                fontFamily: 'Open sans, sans-serif',
+                whiteSpace: 'nowrap',
+                color: '#d50000',
+                fontWeight: 'bold'
+              }}
+            >
+              GAME OVER
+            </div>
+            <Levels current={this.state.level} />
+            <ReactCSSTransitionGroup
+              transitionName='example'
+              transitionEnterTimeout={300}
+              transitionLeaveTimeout={400}
+            >
+              {this.state.dots
+                .concat(
+                  this.state.floatingDots.map(i => ({...i, floating: true}))
+                )
+                .map(params => {
+                  return <Dot {...params} />
+                })}
+            </ReactCSSTransitionGroup>
           </div>
-          <Levels current={this.state.level} />
-          <ReactCSSTransitionGroup
-            transitionName='example'
-            transitionEnterTimeout={300}
-            transitionLeaveTimeout={400}
-          >
-            {this.state.dots
-              .concat(
-                this.state.floatingDots.map(i => ({...i, floating: true}))
-              )
-              .map(params => {
-                return <Dot {...params} />
-              })}
-          </ReactCSSTransitionGroup>
         </div>
-      </div>
+      </Swipeable>
     )
   }
 }
