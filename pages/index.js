@@ -441,12 +441,18 @@ class Page extends React.Component {
               position: 'relative',
               border: '1px solid #ddd',
               width: `${width}px`,
-              paddingBottom: '100%',
-              height: 0,
+              // paddingBottom: '100%',
+              // height: 0,
               maxWidth: '100%',
               background: '#fff'
             }}
           >
+            <div style={{
+              position: 'relative',
+              width: '100%',
+              paddingBottom: '100%',
+              height: 0
+            }} />
             <div
               style={{
                 display: this.state.gameover ? 'block' : 'none',
