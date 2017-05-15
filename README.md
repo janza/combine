@@ -2,4 +2,4 @@
 
 Clone of combine game from mindjolt
 
-https://combine.now.sh/
+https://combine.jjanzic.com/
