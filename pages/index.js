@@ -73,6 +73,7 @@ class Page extends React.Component {
     super()
     this.state = {
       dots: [],
+      score: 0,
       floatingDots: [this.newDot(4, 1), this.newDot(5, 0)],
       level: 2,
       blocksKilled: 0
@@ -185,6 +186,7 @@ class Page extends React.Component {
           }
           l.forEach((d, i) => {
             keep[d.x][d.y] = false
+            this.state.score += ((newColoredDot.type + 1) * 5)
           })
           this.state.blocksKilled++
         }
@@ -447,12 +449,26 @@ class Page extends React.Component {
               background: '#fff'
             }}
           >
-            <div style={{
-              position: 'relative',
-              width: '100%',
-              paddingBottom: '100%',
-              height: 0
-            }} />
+            <div
+              style={{
+                position: 'relative',
+                width: '100%',
+                paddingBottom: '100%',
+                height: 0
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                fontFamily: 'Open sans, sans-serif',
+                color: '#aaa',
+                fontWeight: 'bold',
+                left: '5%',
+                top: '5%'
+              }}
+            >
+              SCORE: { this.state.score }
+            </div>
             <div
               style={{
                 display: this.state.gameover ? 'block' : 'none',
