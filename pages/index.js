@@ -187,7 +187,7 @@ class Page extends React.Component {
           }
           l.forEach((d, i) => {
             keep[d.x][d.y] = false
-            this.state.score += ((newColoredDot.type + 1) * 5)
+            this.updateScore(this.state.score + ((newColoredDot.type + 1) * 5))
           })
           this.state.blocksKilled++
         }
@@ -222,17 +222,18 @@ class Page extends React.Component {
       dots: [],
       floatingDots: []
     })
+    this.updateScore(this.state.score)
   }
 
-  setHighScore () {
+  updateScore (score) {
     if (typeof window === 'undefined') return
-    const localStorage = window.localStorage
-    if (!localStorage) return
-    localStorage['score'] = Math.max(this.state.score, this.state.highScore)
+    const highScore = Math.max(score, this.state.highScore)
+    window.localStorage['score'] = highScore
+    this.setState({highScore, score})
   }
 
   getHighScore () {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') return 0
     const localStorage = window.localStorage
     if (!localStorage) return
     return localStorage['score'] || 0
