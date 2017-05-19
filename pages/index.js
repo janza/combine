@@ -74,6 +74,7 @@ class Page extends React.Component {
     this.state = {
       dots: [],
       score: 0,
+      highScore: this.getHighScore(),
       floatingDots: [this.newDot(4, 1), this.newDot(5, 0)],
       level: 2,
       blocksKilled: 0
@@ -222,6 +223,21 @@ class Page extends React.Component {
       floatingDots: []
     })
   }
+
+  setHighScore () {
+    if (typeof window === 'undefined') return
+    const localStorage = window.localStorage
+    if (!localStorage) return
+    localStorage['score'] = Math.max(this.state.score, this.state.highScore)
+  }
+
+  getHighScore () {
+    if (typeof window === 'undefined') return
+    const localStorage = window.localStorage
+    if (!localStorage) return
+    return localStorage['score'] || 0
+  }
+
   pushDots () {
     const floatingDots = this.state.floatingDots
     if (!floatingDots.length) return
@@ -463,11 +479,12 @@ class Page extends React.Component {
                 fontFamily: 'Open sans, sans-serif',
                 color: '#aaa',
                 fontWeight: 'bold',
-                left: '5%',
+                right: '105%',
                 top: '5%'
               }}
             >
-              SCORE: { this.state.score }
+              <div>SCORE: { this.state.score }</div>
+              <div>HIGHSCORE: { this.state.highScore }</div>
             </div>
             <div
               style={{
