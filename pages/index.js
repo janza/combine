@@ -480,7 +480,8 @@ class Page extends React.Component {
                 color: '#aaa',
                 fontWeight: 'bold',
                 right: '105%',
-                top: '5%'
+                top: '5%',
+                whiteSpace: 'nowrap'
               }}
             >
               <div>SCORE: { this.state.score }</div>
