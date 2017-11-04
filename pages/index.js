@@ -1,5 +1,5 @@
 import KeyHandler, {KEYDOWN} from 'react-key-handler'
-import ReactCSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
+import {CSSTransition, TransitionGroup} from 'react-transition-group'
 import React from 'react'
 import Swipeable from 'react-swipeable'
 import Head from 'next/head'
@@ -74,11 +74,14 @@ class Page extends React.Component {
     this.state = {
       dots: [],
       score: 0,
-      highScore: this.getHighScore(),
+      highScore: 0,
       floatingDots: [this.newDot(4, 1), this.newDot(5, 0)],
       level: 2,
       blocksKilled: 0
     }
+  }
+  componentDidMount () {
+    this.loadHighScore()
   }
   newDot (x, level) {
     return this.newDotAt(x, -1, level)
@@ -232,11 +235,9 @@ class Page extends React.Component {
     this.setState({highScore, score})
   }
 
-  getHighScore () {
-    if (typeof window === 'undefined') return 0
-    const localStorage = window.localStorage
-    if (!localStorage) return
-    return localStorage['score'] || 0
+  loadHighScore () {
+    if (typeof window === 'undefined') return
+    return this.setState({highScore: window.localStorage['score'] || 0})
   }
 
   pushDots () {
@@ -422,11 +423,11 @@ class Page extends React.Component {
   z-index: 2;
 }
 
-.example-leave {
+.example-exit {
   opacity: 1;
 }
 
-.example-leave.example-leave-active {
+.example-exit.example-exit-active {
   opacity: 0.01;
   border-radius: 0% !important;
   transform: scale(0.7);
@@ -505,19 +506,21 @@ class Page extends React.Component {
               GAME OVER
             </div>
             <Levels current={this.state.level} />
-            <ReactCSSTransitionGroup
-              transitionName='example'
-              transitionEnterTimeout={300}
-              transitionLeaveTimeout={400}
-            >
+            <TransitionGroup>
               {this.state.dots
                 .concat(
                   this.state.floatingDots.map(i => ({...i, floating: true}))
                 )
-                .map(params => {
-                  return <Dot {...params} />
+                .map((params, i) => {
+                  return <CSSTransition
+                    key={params.key}
+                    classNames='example'
+                    timeout={{enter: 300, exit: 400}}
+                  >
+                    <Dot {...params} />
+                  </CSSTransition>
                 })}
-            </ReactCSSTransitionGroup>
+            </TransitionGroup>
           </div>
         </div>
       </Swipeable>

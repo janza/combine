@@ -3,14 +3,14 @@
   "license": "MIT",
   "dependencies": {
     "babel-preset-es2015": "^6.24.1",
-    "next": "beta",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
-    "react-key-handler": "^0.3.0",
+    "next": "^4.1.4",
+    "preact": "^8.2.6",
+    "preact-compat": "^3.14.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-key-handler": "^1.0.1",
     "react-swipeable": "^4.0.0",
-    "react-transition-group": "^1.1.2",
-    "preact": "^7.2.0",
-    "preact-compat": "^3.14.0"
+    "react-transition-group": "^2.2.1"
   },
   "scripts": {
     "dev": "next",
