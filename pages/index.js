@@ -1,5 +1,5 @@
-import KeyHandler, {KEYDOWN} from 'react-key-handler'
-import {CSSTransition, TransitionGroup} from 'react-transition-group'
+import KeyHandler, { KEYDOWN } from 'react-key-handler'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import React from 'react'
 import Swipeable from 'react-swipeable'
 import Head from 'next/head'
@@ -23,7 +23,7 @@ const thresholds = [0, 0, 5, 30, 90, 150, 230, 280, 350, 450]
 
 var dotsId = 0
 
-const Dot = ({x, y, type, floating}) => (
+const Dot = ({ x, y, type, floating }) => (
   <div
     style={{
       position: 'absolute',
@@ -38,7 +38,7 @@ const Dot = ({x, y, type, floating}) => (
   />
 )
 
-const Levels = ({current}) => {
+const Levels = ({ current }) => {
   return (
     <div
       style={{
@@ -91,9 +91,10 @@ class Page extends React.Component {
       x,
       y,
       key: dotsId++,
-      type: level !== undefined
-        ? level
-        : Math.floor(Math.random() * this.state.level)
+      type:
+        level !== undefined
+          ? level
+          : Math.floor(Math.random() * this.state.level)
     }
   }
   moveDotsLeft () {
@@ -176,7 +177,7 @@ class Page extends React.Component {
               if (d.y === min.y && d.x < min.x) return d
               return min
             },
-            {x: 10, y: -2}
+            { x: 10, y: -2 }
           )
 
           if (newColoredDot.type < colors.length - 1) {
@@ -190,7 +191,7 @@ class Page extends React.Component {
           }
           l.forEach((d, i) => {
             keep[d.x][d.y] = false
-            this.updateScore(this.state.score + ((newColoredDot.type + 1) * 5))
+            this.updateScore(this.state.score + (newColoredDot.type + 1) * 5)
           })
           this.state.blocksKilled++
         }
@@ -232,12 +233,12 @@ class Page extends React.Component {
     if (typeof window === 'undefined') return
     const highScore = Math.max(score, this.state.highScore)
     window.localStorage['score'] = highScore
-    this.setState({highScore, score})
+    this.setState({ highScore, score })
   }
 
   loadHighScore () {
     if (typeof window === 'undefined') return
-    return this.setState({highScore: window.localStorage['score'] || 0})
+    return this.setState({ highScore: window.localStorage['score'] || 0 })
   }
 
   pushDots () {
@@ -383,13 +384,12 @@ class Page extends React.Component {
   render () {
     return (
       <Swipeable onSwiped={this.swiped.bind(this)}>
-
         <Head>
           <title>Combine!</title>
-          <meta charSet='utf-8' />
+          <meta charSet="utf-8" />
           <meta
-            name='viewport'
-            content='initial-scale=1.0, width=device-width'
+            name="viewport"
+            content="initial-scale=1.0, width=device-width"
           />
         </Head>
 
@@ -408,51 +408,51 @@ class Page extends React.Component {
           }}
         >
           <style jsx global>{`
-.example-enter {
-  transform: scale(1.7);
-  border-radius: 0% !important;
-  opacity: 0.01;
-  z-index: 2;
-}
+            .example-enter {
+              transform: scale(1.7);
+              border-radius: 0% !important;
+              opacity: 0.01;
+              z-index: 2;
+            }
 
-.example-enter.example-enter-active {
-  opacity: 1;
-  transform: scale(1);
-  border-radius: 50% !important;
-  transition: 0.3s !important;
-  z-index: 2;
-}
+            .example-enter.example-enter-active {
+              opacity: 1;
+              transform: scale(1);
+              border-radius: 50% !important;
+              transition: 0.3s !important;
+              z-index: 2;
+            }
 
-.example-exit {
-  opacity: 1;
-}
+            .example-exit {
+              opacity: 1;
+            }
 
-.example-exit.example-exit-active {
-  opacity: 0.01;
-  border-radius: 0% !important;
-  transform: scale(0.7);
-  transition: 0.4s !important;
-}
-        `}</style>
+            .example-exit.example-exit-active {
+              opacity: 0.01;
+              border-radius: 0% !important;
+              transform: scale(0.7);
+              transition: 0.4s !important;
+            }
+          `}</style>
 
           <KeyHandler
             keyEventName={KEYDOWN}
-            keyValue='ArrowDown'
+            keyValue="ArrowDown"
             onKeyHandle={() => this.pushDots()}
           />
           <KeyHandler
             keyEventName={KEYDOWN}
-            keyValue='ArrowLeft'
+            keyValue="ArrowLeft"
             onKeyHandle={() => this.moveDotsLeft()}
           />
           <KeyHandler
             keyEventName={KEYDOWN}
-            keyValue='ArrowRight'
+            keyValue="ArrowRight"
             onKeyHandle={() => this.moveDotsRight()}
           />
           <KeyHandler
             keyEventName={KEYDOWN}
-            keyValue='ArrowUp'
+            keyValue="ArrowUp"
             onKeyHandle={() => this.rotateDots()}
           />
 
@@ -486,8 +486,8 @@ class Page extends React.Component {
                 whiteSpace: 'nowrap'
               }}
             >
-              <div>SCORE: { this.state.score }</div>
-              <div>HIGHSCORE: { this.state.highScore }</div>
+              <div>SCORE: {this.state.score}</div>
+              <div>HIGHSCORE: {this.state.highScore}</div>
             </div>
             <div
               style={{
@@ -509,16 +509,18 @@ class Page extends React.Component {
             <TransitionGroup>
               {this.state.dots
                 .concat(
-                  this.state.floatingDots.map(i => ({...i, floating: true}))
+                  this.state.floatingDots.map(i => ({ ...i, floating: true }))
                 )
                 .map((params, i) => {
-                  return <CSSTransition
-                    key={params.key}
-                    classNames='example'
-                    timeout={{enter: 300, exit: 400}}
-                  >
-                    <Dot {...params} />
-                  </CSSTransition>
+                  return (
+                    <CSSTransition
+                      key={params.key}
+                      classNames="example"
+                      timeout={{ enter: 300, exit: 400 }}
+                    >
+                      <Dot {...params} />
+                    </CSSTransition>
+                  )
                 })}
             </TransitionGroup>
           </div>
@@ -529,4 +531,3 @@ class Page extends React.Component {
 }
 
 export default () => <Page />
-
