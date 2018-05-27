@@ -3,9 +3,7 @@
   "license": "MIT",
   "dependencies": {
     "babel-preset-es2015": "^6.24.1",
-    "next": "^4.1.4",
-    "preact": "^8.2.6",
-    "preact-compat": "^3.17.0",
+    "next": "^4.2.3",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-key-handler": "^1.0.1",

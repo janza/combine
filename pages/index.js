@@ -5,7 +5,7 @@ import Head from 'next/head'
 import game from '../lib/game'
 import GameBoard from '../components/GameBoard'
 
-class Page extends React.Component {
+export default class Page extends React.Component {
   constructor (props) {
     super()
     this.game = game()
@@ -88,5 +88,3 @@ class Page extends React.Component {
     )
   }
 }
-
-export default () => <Page />
