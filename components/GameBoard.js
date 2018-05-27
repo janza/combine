@@ -38,60 +38,30 @@ const GameOverScreen = ({ gameover }) => (
   </div>
 )
 
-const GameBox = ({ width, children }) => {
-  console.log(arguments)
-  return (
+const GameBox = ({ width, children }) => (
+  <div
+    style={{
+      position: 'relative',
+      border: '1px solid #ddd',
+      width: `${width}px`,
+      maxWidth: '100%',
+      background: '#fff'
+    }}
+  >
     <div
       style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'fixed',
-        background: '#f5f5f5',
-        margin: 0,
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0
+        position: 'relative',
+        width: '100%',
+        paddingBottom: '100%',
+        height: 0
       }}
-    >
-      <div
-        style={{
-          position: 'relative',
-          border: '1px solid #ddd',
-          width: `${width}px`,
-          maxWidth: '100%',
-          background: '#fff'
-        }}
-      >
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            paddingBottom: '100%',
-            height: 0
-          }}
-        />
-        {children}
-      </div>
-    </div>
-  )
-}
+    />
+    {children}
+  </div>
+)
 
-export default ({
-  width,
-  colors,
-  score,
-  highScore,
-  gameover,
-  level,
-  balls
-}) => (
-  <GameBox width={width}>
-    <Score score={score} highScore={highScore} />
-    <GameOverScreen gameover={gameover} />
-    <Levels colors={colors} current={level} />
-
+const Balls = ({ colors, balls }) => (
+  <TransitionGroup>
     <style jsx global>{`
       .ball-enter {
         transform: scale(1.7);
@@ -119,16 +89,31 @@ export default ({
         transition: 0.4s !important;
       }
     `}</style>
-    <TransitionGroup>
-      {balls.map(params => (
-        <CSSTransition
-          key={params.key}
-          classNames='ball'
-          timeout={{ enter: 300, exit: 400 }}
-        >
-          <Ball colors={colors} {...params} />
-        </CSSTransition>
-      ))}
-    </TransitionGroup>
+    {balls.map(params => (
+      <CSSTransition
+        key={params.key}
+        classNames='ball'
+        timeout={{ enter: 300, exit: 400 }}
+      >
+        <Ball colors={colors} {...params} />
+      </CSSTransition>
+    ))}
+  </TransitionGroup>
+)
+
+export default ({
+  width,
+  colors,
+  score,
+  highScore,
+  gameover,
+  level,
+  balls
+}) => (
+  <GameBox width={width}>
+    <Score score={score} highScore={highScore} />
+    <GameOverScreen gameover={gameover} />
+    <Levels colors={colors} current={level} />
+    <Balls balls={balls} colors={colors} />
   </GameBox>
 )
