@@ -90,6 +90,24 @@ test('it calculates highscore', t => {
   t.end()
 })
 
+test('it levels up', t => {
+  const g = game(l => l, cb => cb())
+  t.deepEqual(g.level(), 2)
+
+  g.pushDots()
+  g.pushDots()
+  g.pushDots()
+  g.pushDots()
+  g.pushDots()
+  g.pushDots()
+  g.pushDots()
+  g.pushDots()
+  g.pushDots()
+
+  t.deepEqual(g.level(), 3)
+  t.end()
+})
+
 test('it executes commands correctly', t => {
   const executeCommands = testCommands(t)
 
@@ -300,6 +318,66 @@ test('it executes commands correctly', t => {
 .......
 ....4..
 ....10.
+`
+  )
+
+  executeCommands(
+    'dddddlld',
+    `
+.......
+....22.
+.......
+.......
+.......
+.......
+.......
+....33.
+..2210.
+`
+  )
+
+  executeCommands(
+    'dddddlldrd',
+    `
+.......
+....22.
+.......
+.......
+.......
+.......
+.....2.
+....33.
+..22102
+`
+  )
+
+  executeCommands(
+    'dddddlldrdllul',
+    `
+..2....
+..2....
+.......
+.......
+.......
+.......
+.....2.
+....33.
+..22102
+`
+  )
+
+  executeCommands(
+    'dddddlldrdlluld',
+    `
+.......
+....22.
+.......
+.......
+.......
+.......
+.....2.
+....33.
+..3.102
 `
   )
 
