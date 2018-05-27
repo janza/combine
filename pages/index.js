@@ -7,7 +7,7 @@ import GameControls from '../components/GameControls'
 export default class Page extends React.Component {
   constructor () {
     super()
-    this.game = game()
+    this.game = game(null, f => f())
     this.game.onUpdate(s => this.setState(s))
   }
 

@@ -8,7 +8,12 @@
     "react-dom": "^16.0.0",
     "react-key-handler": "^1.0.1",
     "react-swipeable": "^4.0.0",
-    "react-transition-group": "^2.2.1"
+    "react-transition-group": "^2.2.1",
+    "tap-diff": "^0.1.1",
+    "tap-difflet": "^0.7.1",
+    "tap-prettify": "0.0.2",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.9.0"
   },
   "scripts": {
     "dev": "next",
