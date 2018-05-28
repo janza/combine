@@ -23,6 +23,11 @@ const visualizeBalls = balls => {
   return output.trim()
 }
 
+const compareBoard = (t, board, game, msg) => {
+  const output = visualizeBalls(game.balls()).split('\n')
+  t.deepEqual(board.trim().split('\n'), output, msg)
+}
+
 const testCommands = t => (commands, board) => {
   const g = game(l => l, cb => cb())
   commands.split('').forEach(command => {
@@ -37,8 +42,7 @@ const testCommands = t => (commands, board) => {
         return g.pushDots()
     }
   })
-  const output = visualizeBalls(g.balls()).split('\n')
-  t.deepEqual(board.trim().split('\n'), output, `commands '${commands}'`)
+  compareBoard(t, board, g, `commands '${commands}'`)
 }
 
 test('it has balls', t => {
@@ -443,3 +447,33 @@ test('it executes commands correctly', t => {
 
   t.end()
 })
+
+test('can init from board', t => {
+  const g = game(
+    null,
+    null,
+    `
+.......
+.......
+.......
+.......
+.....2.
+....33.
+..3.102
+  `.trim()
+  )
+
+  compareBoard(t, `
+.......
+....10.
+.......
+.......
+.......
+.......
+.....2.
+....33.
+..3.102
+  `, g)
+  t.end()
+})
+
