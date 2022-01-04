@@ -48,7 +48,7 @@ export default class Page extends React.Component {
           }}
         >
           <GameBoard
-            width={600}
+            width={500}
             colors={this.game.colors()}
             score={this.game.score()}
             highScore={this.game.highScore()}
