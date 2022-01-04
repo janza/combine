@@ -24,12 +24,16 @@ const visualizeBalls = balls => {
 }
 
 const compareBoard = (t, board, game, msg) => {
+  if (board === 'gameover') {
+    t.deepEqual(game.gameover(), true, `${msg} is gameover`)
+    return
+  }
   const output = visualizeBalls(game.balls()).split('\n')
-  t.deepEqual(board.trim().split('\n'), output, msg)
+  t.deepEqual(output, board.trim().split('\n'), msg)
 }
 
-const testCommands = t => (commands, board) => {
-  const g = game(l => l, cb => cb())
+const testCommands = t => (commands, board, initBoard) => {
+  const g = game(l => l, cb => cb(), initBoard)
   commands.split('').forEach(command => {
     switch (command) {
       case 'l':
@@ -444,6 +448,21 @@ test('it executes commands correctly', t => {
 .......
 `
   )
+
+  executeCommands(
+    'ud',
+    `gameover`,
+    `
+.....0.
+.....3.
+.....3.
+.....2.
+.....2.
+....33.
+..3.102
+`.trim()
+  )
+
 
   t.end()
 })

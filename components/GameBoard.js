@@ -31,7 +31,11 @@ const GameOverScreen = ({ gameover }) => (
       fontFamily: 'Open sans, sans-serif',
       whiteSpace: 'nowrap',
       color: '#d50000',
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      zIndex: '2',
+      background: '#fff',
+      padding: '5px 20px',
+      border: '4px solid rgb(213, 0, 0)'
     }}
   >
     GAME OVER
